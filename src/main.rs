@@ -3,7 +3,7 @@ use std::io::{Write, BufReader, BufRead, Error};
 
 fn main() -> Result<(), Error> {
     let my_filter = "II-МР";
-    let mut output_file = File::create("Output_file.txt")?;
+    let mut output_file = File::create("new_data.txt")?;
 
     let file_open = File::open("data_utf8.txt")?;
     let buffered = BufReader::new(file_open);
