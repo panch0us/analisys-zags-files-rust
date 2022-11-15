@@ -1,37 +1,19 @@
-use std::io;
-use rand::Rng;
-use std::cmp::Ordering;
+use std::fs::File;
+use std::io::{Write, BufReader, BufRead, Error};
 
+fn main() -> Result<(), Error> {
+    let my_filter = "II-МР";
+    let mut output_file = File::create("Output_file.txt")?;
 
-fn main() {
-    println!("Guess the number!");
-    
-    let secret_number = rand::thread_rng().gen_range(1..=100);
-    
-    // println!("The secret number is: {secret_number}");
-    loop {
-         println!("Please input your guess.");
-        
-         let mut guess = String::new();
-        
-         io::stdin()
-             .read_line(&mut guess)
-             .expect("Failed to read line");
-    
-         let guess: u32 = match guess.trim().parse() {
-           Ok(num) => num,
-           Err(_) => continue,
-         };
+    let file_open = File::open("data_utf8.txt")?;
+    let buffered = BufReader::new(file_open);
 
-         println!("You guessed: {guess}");
-
-         match guess.cmp(&secret_number) {
-             Ordering::Less => println!("Too small"),
-             Ordering::Greater => println!("To big"),
-             Ordering::Equal => {
-                 println!("You win");
-                 break;
-             }
-            }
+    for line in buffered.lines() {
+        let result = &line?;
+        if result.contains(&my_filter) {
+            //println!("{}", result);
+            write!(output_file, "{}\n", result)?;
         }
-    }   
+    }
+    Ok(())
+}
